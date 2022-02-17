@@ -10,6 +10,7 @@ import shutil
 import tempfile
 from unittest.mock import Mock, NonCallableMock, patch
 
+import bleach
 import ddt
 import pytest
 from boto.exception import BotoServerError
@@ -3482,6 +3483,39 @@ class TestInstructorSendEmail(SiteMixin, SharedModuleStoreTestCase, LoginEnrollm
                                                subject=self.full_test_message['subject'],
                                                html_message=self.full_test_message['message'],
                                                template_name=org_template, from_addr=org_email).count()
+
+    def test_send_email_and_sanitize_content(self):
+        test_subject = 'sanitization test subject'
+        test_message = """
+        <script>Content inside script tag</script>
+        <form action="/action_page.php">
+            <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+        """
+        import pdb; pdb.set_trace()
+        message = {
+            'send_to': '["myself", "staff"]',
+            'subject': test_subject,
+            'message': test_message,
+        }
+        sanitized_message = bleach.clean(message, tags=settings.BULK_COURSE_EMAIL_ALLOWED_HTML_TAGS)
+
+        url = reverse('send_email', kwargs={'course_id': str(self.course.id)})
+        response = self.client.post(url, self.full_test_message)
+
+        # retrieve the CourseEmail created
+        email = CourseEmail.objects.filter(
+            course_id=self.course.id,
+            sender=self.instructor,
+            subject=self.full_test_message['subject'],
+            html_message=self.full_test_message['message'],
+        )
+
+        assert email.html_message == sanitized_message
+
+
 
 
 class MockCompletionInfo:

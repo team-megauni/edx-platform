@@ -13,6 +13,7 @@ import string
 import random
 import re
 
+import bleach
 import edx_api_doc_tools as apidocs
 from django.conf import settings
 from django.contrib.auth.models import User  # lint-amnesty, pylint: disable=imported-auth-user
@@ -2734,11 +2735,15 @@ def send_email(request, course_id):
     # any transaction that has been pending up to this point will also be
     # committed.
     try:
+        # sanitize the email content before creating the CourseEmail instance
+        sanitized_message = bleach.clean(message, tags=settings.BULK_COURSE_EMAIL_ALLOWED_HTML_TAGS)
+
         email = CourseEmail.create(
             course_id,
             request.user,
             targets,
-            subject, message,
+            subject,
+            sanitized_message,
             template_name=template_name,
             from_addr=from_addr
         )
