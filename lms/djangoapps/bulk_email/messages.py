@@ -36,11 +36,12 @@ class DjangoEmail(CourseEmailMessage):
         Construct message content using course_email model and context
         """
         self.connection = connection
+        template_context = email_context.copy()
         # use the CourseEmailTemplate that was associated with the CourseEmail
         course_email_template = course_email.get_template()
 
-        plaintext_msg = course_email_template.render_plaintext(course_email.text_message, email_context)
-        html_msg = course_email_template.render_htmltext(course_email.html_message, email_context)
+        plaintext_msg = course_email_template.render_plaintext(course_email.text_message, template_context)
+        html_msg = course_email_template.render_htmltext(course_email.html_message, template_context)        
 
         # Create email:
         message = EmailMultiAlternatives(
@@ -68,7 +69,7 @@ class ACEEmail(CourseEmailMessage):
         Construct edx-ace message using email_context
         """
         self.site = site        
-        self.user = User.objects.get(email=email_context['email'])
+        self.user = User.objects.get(email=email_context['email'])        
         message = BulkEmail(context=email_context).personalize(
             recipient=Recipient(email_context['user_id'], email_context['email']),
             language=email_context['course_language'],
