@@ -3494,27 +3494,20 @@ class TestInstructorSendEmail(SiteMixin, SharedModuleStoreTestCase, LoginEnrollm
             <input type="submit" value="Submit">
         </form>
         """
-        import pdb; pdb.set_trace()
         message = {
             'send_to': '["myself", "staff"]',
             'subject': test_subject,
             'message': test_message,
         }
-        sanitized_message = bleach.clean(message, tags=settings.BULK_COURSE_EMAIL_ALLOWED_HTML_TAGS)
+        sanitized_message = bleach.clean(test_message, tags=settings.BULK_COURSE_EMAIL_ALLOWED_HTML_TAGS)
 
         url = reverse('send_email', kwargs={'course_id': str(self.course.id)})
-        response = self.client.post(url, self.full_test_message)
+        response = self.client.post(url, message)
 
-        # retrieve the CourseEmail created
-        email = CourseEmail.objects.filter(
-            course_id=self.course.id,
-            sender=self.instructor,
-            subject=self.full_test_message['subject'],
-            html_message=self.full_test_message['message'],
-        )
+        email = CourseEmail.objects.filter(course_id=self.course.id, sender=self.instructor)
 
-        assert email.html_message == sanitized_message
-
+        assert response.status_code == 200
+        assert email[0].html_message == sanitized_message
 
 
 
