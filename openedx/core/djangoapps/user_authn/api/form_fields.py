@@ -44,6 +44,8 @@ def add_level_of_education_field():
     # Translators: This label appears above a dropdown menu used to select
     # the user's highest completed level of education.
     education_level_label = _("Highest level of education completed")
+
+    # pylint: disable=translation-of-non-string
     options = [(name, _(label)) for name, label in UserProfile.LEVEL_OF_EDUCATION_CHOICES]
 
     if settings.ENABLE_COPPA_COMPLIANCE:
@@ -66,6 +68,7 @@ def add_gender_field():
     # the user's gender.
     gender_label = _("Gender")
 
+    # pylint: disable=translation-of-non-string
     options = [(name, _(label)) for name, label in UserProfile.GENDER_CHOICES]
     return {
         'name': 'gender',
@@ -150,6 +153,7 @@ def add_title_field():
     # user to input the Title
     title_label = _("Title")
     return _add_field_with_configurable_select_options('title', title_label)
+
 
 def add_job_title_field():
     """

@@ -8,8 +8,8 @@ from edx_rest_framework_extensions.auth.jwt.authentication import JwtAuthenticat
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.throttling import AnonRateThrottle
 from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
@@ -17,18 +17,18 @@ from openedx.core.djangoapps.user_authn.api import form_fields
 from openedx.core.lib.api.authentication import BearerAuthentication
 
 
-class OptionalFieldsDataThrottle(AnonRateThrottle):
+class OptionalFieldsThrottle(UserRateThrottle):
     """
     Setting rate limit for OptionalFieldsData API
     """
-    rate = settings.OPTIONAL_FIELD_DESCRIPTION_API_RATELIMIT
+    rate = settings.OPTIONAL_FIELD_API_RATELIMIT
 
 
-class OptionalFieldsDataView(APIView):
+class OptionalFieldsView(APIView):
     """
     Construct Registration forms and associated fields.
     """
-    throttle_classes = [OptionalFieldsDataThrottle]
+    throttle_classes = [OptionalFieldsThrottle]
     authentication_classes = (JwtAuthentication, BearerAuthentication, SessionAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -73,7 +73,7 @@ class OptionalFieldsDataView(APIView):
         return field_order
 
     def __init__(self):
-
+        super().__init__()
         self._fields_setting = copy.deepcopy(configuration_helpers.get_value('REGISTRATION_EXTRA_FIELDS'))
         if not self._fields_setting:
             self._fields_setting = copy.deepcopy(settings.REGISTRATION_EXTRA_FIELDS)
@@ -91,7 +91,7 @@ class OptionalFieldsDataView(APIView):
         """
         response = {}
         for field in self.valid_fields:
-            field_handler = getattr(form_fields, 'add_%s_field' % field, None)
+            field_handler = getattr(form_fields, f'add_{field}_field', None)
             if field_handler:
                 response[field] = field_handler()
 

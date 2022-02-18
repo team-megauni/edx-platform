@@ -9,8 +9,6 @@ from rest_framework.test import APITestCase
 
 from openedx.core.djangoapps.site_configuration.tests.test_util import with_site_configuration
 from openedx.core.djangolib.testing.utils import skip_unless_lms
-from openedx.core.lib.api import test_utils
-from common.djangoapps.student.helpers import authenticate_new_user
 from common.djangoapps.student.tests.factories import UserFactory
 
 
