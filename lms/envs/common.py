@@ -1296,7 +1296,8 @@ WIKI_ENABLED = True
 
 COURSE_MODE_DEFAULTS = {
     'bulk_sku': None,
-    'currency': 'usd',
+# EDIT    'currency': 'usd',
+    'currency': 'vnd',
     'description': None,
     'expiration_datetime': None,
     'min_price': 0,

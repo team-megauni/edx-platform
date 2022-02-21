@@ -2,10 +2,9 @@
 Middleware for Language Preferences
 """
 
-
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
-from django.utils.translation import LANGUAGE_SESSION_KEY
+from django.utils.translation import LANGUAGE_SESSION_KEY, get_language
 from django.utils.translation.trans_real import parse_accept_lang_header
 
 from openedx.core.djangoapps.lang_pref import COOKIE_DURATION, LANGUAGE_HEADER, LANGUAGE_KEY
@@ -28,6 +27,7 @@ class LanguagePreferenceMiddleware(MiddlewareMixin):
         Save the current language preference cookie as the user's preferred language.
         """
         cookie_lang = request.COOKIES.get(settings.LANGUAGE_COOKIE, None)
+        
         if cookie_lang:
             if request.user.is_authenticated:
                 set_user_preference(request.user, LANGUAGE_KEY, cookie_lang)
@@ -35,6 +35,7 @@ class LanguagePreferenceMiddleware(MiddlewareMixin):
                 request._anonymous_user_cookie_lang = cookie_lang  # lint-amnesty, pylint: disable=protected-access
 
             accept_header = request.META.get(LANGUAGE_HEADER, None)
+
             if accept_header:
                 current_langs = parse_accept_lang_header(accept_header)
                 # Promote the cookie_lang over any language currently in the accept header

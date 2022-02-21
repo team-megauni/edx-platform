@@ -34,6 +34,12 @@ def index(request):
     """
     Redirects to main page -- info page if user authenticated, or marketing if not
     """
+
+    # EDIT
+    _lang = request.GET.get('language', translation.get_language())
+    log.info("LANGUAGE: %s" % _lang)
+    log.info("TRANSLATION LANGUAGE: %s" % translation.get_language())
+
     if request.user.is_authenticated:
         # Only redirect to dashboard if user has
         # courses in their dashboard. Otherwise UX is a bit cryptic.
@@ -100,6 +106,12 @@ def courses(request):
 
     #  we do not expect this case to be reached in cases where
     #  marketing is enabled or the courses are not browsable
+    return courseware_views.courses(request)
+
+
+@ensure_csrf_cookie
+@cache_if_anonymous()
+def courses_page(request):
     return courseware_views.courses(request)
 
 

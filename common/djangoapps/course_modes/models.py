@@ -762,6 +762,8 @@ class CourseMode(models.Model):
         If there is no mode found, will return the price of DEFAULT_MODE, which is 0
         """
         modes = cls.modes_for_course(course_id)
+        log.info('FOR_DEBUG: %s' % modes)
+        log.info('FOR_DEBUG: %s, %s' % (course_id, currency))
         return min(mode.min_price for mode in modes if mode.currency.lower() == currency.lower())
 
     @classmethod

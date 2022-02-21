@@ -27,7 +27,7 @@ def send_activation_email(self, msg_string, from_address=None):
     Sending an activation email to the user.
     """
     msg = Message.from_string(msg_string)
-
+    log.info('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     max_retries = settings.RETRY_ACTIVATION_EMAIL_MAX_ATTEMPTS
     retries = self.request.retries
 
@@ -36,9 +36,9 @@ def send_activation_email(self, msg_string, from_address=None):
             configuration_helpers.get_value('email_from_address', settings.DEFAULT_FROM_EMAIL)
         )
     msg.options['from_address'] = from_address
-
+    log.info(from_address)
+    from_address = 'administrator@megauni.vn'
     dest_addr = msg.recipient.email_address
-
     site = Site.objects.get_current()
     user = User.objects.get(id=msg.recipient.lms_user_id)
 
