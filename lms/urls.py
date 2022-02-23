@@ -342,6 +342,7 @@ urlpatterns += [
         name=RESET_COURSE_DEADLINES_NAME,
     ),
 
+    url(r'^courses/all/?$', branding_views.courses_page, name='courses-page'),
     url(r'^courses/?$', branding_views.courses, name='courses'),
 
     # About the course

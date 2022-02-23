@@ -312,3 +312,10 @@ def footer(request):
 
     else:
         return HttpResponse(status=406)
+
+
+# Make the courses page available even ENABLE_MKTG_SITE is enabled
+@ensure_csrf_cookie
+@cache_if_anonymous()
+def courses_page(request):
+    return courseware_views.courses(request)
