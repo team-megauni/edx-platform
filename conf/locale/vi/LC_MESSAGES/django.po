@@ -23042,6 +23042,10 @@ msgid "(UTC)"
 msgstr "(UTC)"
 
 #: cms/templates/settings.html
+msgid "(local time)"
+msgstr "(giờ địa phương)"
+
+#: cms/templates/settings.html
 msgid "Course End Date"
 msgstr "Ngày kết thúc khóa học"
 
