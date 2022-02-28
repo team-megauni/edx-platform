@@ -25,6 +25,16 @@
   <meta name="path_prefix" content="{{EDX_ROOT_URL}}">
 </head>
 
+<script>
+  function initFreshChat() {
+    window.fcWidget.init({
+      token: "49ea7a4b-22c0-4f02-ad73-5d08c1cbeab1",
+      host: "https://wchat.freshchat.com"
+    });
+  }
+  function initialize(i,t){var e;i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}function initiateCall(){initialize(document,"Freshdesk Messaging-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);
+</script>
+
 <body class="{% block bodyclass %}{% endblock %} lang_{{LANGUAGE_CODE}}">
     {% load render_bundle from webpack_loader %}
     {% render_bundle "commons" %}
