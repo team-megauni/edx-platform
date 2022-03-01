@@ -176,8 +176,8 @@ from common.djangoapps.pipeline_mako import render_require_js_path_overrides
 <script>
   function initFreshChat() {
     window.fcWidget.init({
-      token: "49ea7a4b-22c0-4f02-ad73-5d08c1cbeab1",
-      host: "https://wchat.freshchat.com"
+      token: "${settings.FRESHCHAT_TOKEN}",
+      host: "${settings.FRESHCHAT_HOST}",
     });
   }
   function initialize(i,t){var e;i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}function initiateCall(){initialize(document,"Freshdesk Messaging-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);

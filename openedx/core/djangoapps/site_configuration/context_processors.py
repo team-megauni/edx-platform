@@ -17,4 +17,6 @@ def configuration_context(request):
         'platform_name': configuration_helpers.get_value('platform_name', settings.PLATFORM_NAME),
         'current_url': urlquote_plus(request.build_absolute_uri(request.path)),
         'current_site_url': urlquote_plus(request.build_absolute_uri('/')),
+        'freshchat_token': configuration_helpers.get_value('freshchat_token', settings.FRESHCHAT_TOKEN),
+        'freshchat_host': configuration_helpers.get_value('freshchat_host', settings.FRESHCHAT_HOST),
     }
