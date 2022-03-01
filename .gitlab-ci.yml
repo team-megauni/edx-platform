@@ -1,0 +1,38 @@
+image: docker:dind
+variables:
+  DOCKER_HOST: tcp://docker:2375
+
+before_script:
+  - apk add --no-cache grep rsync
+  - mkdir -p ~/.ssh
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - eval "$(ssh-agent -s)"
+  - ssh-add ~/.ssh/id_rsa
+  - ssh-keyscan -H $IP >> ~/.ssh/known_hosts
+
+stages:
+  - deploy
+
+deploy_staging:
+  stage: deploy
+  only:
+    refs:
+      - megauni/staging
+  script:
+    - ssh -T deployer@$IP "cd /edx/app/edxapp/edx-platform && sudo git checkout megauni/staging && sudo git pull"
+    - ssh -T deployer@$IP "sudo /edx/bin/supervisorctl restart lms cms"
+  environment: staging
+  tags:
+    - megauni
+
+deploy_prod:
+  stage: deploy
+  only:
+    refs:
+      - megauni/prod
+  script:
+    - ssh -T deployer@$IP "cd /edx/app/edxapp/edx-platform && sudo git checkout megauni/prod && sudo git pull"
+    - ssh -T deployer@$IP "sudo /edx/bin/supervisorctl restart lms cms"
+  environment: prod
+  when: manual
