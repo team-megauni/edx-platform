@@ -3,8 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from .production import *
 
 
-CONVERT_UTC_TO_TIME_ZONE = True
-
 COURSE_MODE_DEFAULTS = {
     'bulk_sku': None,
     'currency': 'vnd',
@@ -16,3 +14,8 @@ COURSE_MODE_DEFAULTS = {
     'slug': 'audit',
     'suggested_prices': '',
 }
+
+CONVERT_UTC_TO_TIME_ZONE = ENV_TOKENS.get('CONVERT_UTC_TO_TIME_ZONE', True)
+
+FRESHCHAT_TOKEN = ENV_TOKENS.get('FRESHCHAT_TOKEN', '')
+FRESHCHAT_HOST = ENV_TOKENS.get('FRESHCHAT_HOST', '')
