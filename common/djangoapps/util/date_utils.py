@@ -2,16 +2,18 @@
 Convenience methods for working with datetime objects
 """
 
-
 import re
 from datetime import datetime, timedelta
 
 import crum
+from django.conf import settings
 from django.utils.translation import get_language, pgettext, ugettext
 from pytz import UnknownTimeZoneError, timezone, utc
 
 from lms.djangoapps.courseware.context_processor import user_timezone_locale_prefs
 from openedx.core.djangolib.markup import HTML
+
+from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
 
 
 def get_default_time_display(dtime):
@@ -27,16 +29,20 @@ def get_default_time_display(dtime):
     """
     if dtime is None:
         return ""
+    if configuration_helpers.get_value('CONVERT_UTC_TO_TIME_ZONE', default=settings.CONVERT_UTC_TO_TIME_ZONE):
+        if dtime.tzinfo is None or dtime.utcoffset().total_seconds() == 0:  # check if offset is zero
+            dtime = dtime.astimezone(timezone(configuration_helpers.get_value('TIME_ZONE', default=settings.TIME_ZONE)))
+            return get_default_time_display(dtime)
     if dtime.tzinfo is not None:
         try:
-            timezone = " " + dtime.tzinfo.tzname(dtime)  # lint-amnesty, pylint: disable=redefined-outer-name
+            timezone_part = " " + dtime.tzinfo.tzname(dtime)  # lint-amnesty, pylint: disable=redefined-outer-name
         except NotImplementedError:
-            timezone = dtime.strftime('%z')
+            timezone_part = dtime.strftime('%z')
     else:
-        timezone = " UTC"
+        timezone_part= " UTC"
 
-    localized = strftime_localized(dtime, "DATE_TIME")
-    return (localized + timezone).strip()
+    localized_part = strftime_localized(dtime, "DATE_TIME")
+    return (localized_part + timezone_part).strip()
 
 
 def get_time_display(dtime, format_string=None, coerce_tz=None):

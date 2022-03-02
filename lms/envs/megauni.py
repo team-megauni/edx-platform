@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from .production import *
 
 
+CONVERT_UTC_TO_TIME_ZONE = True
+
 COURSE_MODE_DEFAULTS = {
     'bulk_sku': None,
     'currency': 'vnd',
