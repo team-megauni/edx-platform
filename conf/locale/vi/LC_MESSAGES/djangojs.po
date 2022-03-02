@@ -10364,6 +10364,10 @@ msgid "Due Time in UTC:"
 msgstr "Giờ đến hạn theo UTC:"
 
 #: cms/templates/js/due-date-editor.underscore
+msgid "Due Time (local time):"
+msgstr "Thời gian đến hạn (giờ địa phương):"
+
+#: cms/templates/js/due-date-editor.underscore
 msgid "Clear Grading Due Date"
 msgstr "Xoá Hạn Chấm bải"
 
@@ -10779,6 +10783,10 @@ msgstr "Ngày phát hành:"
 #: cms/templates/js/release-date-editor.underscore
 msgid "Release Time in UTC:"
 msgstr "Giờ phát hành theo UTC:"
+
+#: cms/templates/js/release-date-editor.underscore
+msgid "Release Time (local time):"
+msgstr "Thời gian phát hành (giờ địa phương):"
 
 #: cms/templates/js/release-date-editor.underscore
 msgid "Clear Release Date/Time"
