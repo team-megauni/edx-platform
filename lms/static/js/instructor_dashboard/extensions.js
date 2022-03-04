@@ -5,6 +5,7 @@
     var Extensions;
 
     Extensions = (function() {
+        
         function extensions($section) {
             var $gridDisplay,
                 ext = this;
@@ -30,7 +31,7 @@
                 sendData = {
                     student: ext.$student_input.val(),
                     url: ext.$url_input.val(),
-                    due_datetime: ext.$due_datetime_input.val(),
+                    due_datetime: new Date(ext.$due_datetime_input.val()).toJSON(),
                     reason: ext.$reason_input.val()
                 };
                 return $.ajax({
